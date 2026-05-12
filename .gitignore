@@ -1,0 +1,19 @@
+node_modules/
+.expo/
+dist/
+.next/
+
+# Env files — never commit
+.env
+.env.local
+apps/mobile/.env
+apps/admin/.env.local
+supabase/functions/.env
+
+# Supabase local dev artifacts
+supabase/.branches/
+supabase/.temp/
+
+# OS
+.DS_Store
+Thumbs.db

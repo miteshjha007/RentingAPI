@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "RentEasy",
+    "slug": "renteasy",
+    "version": "1.0.0",
+    "scheme": "renteasy",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F0F0F"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F0F0F"
+      },
+      "package": "com.renteasy.app",
+      "config": {
+        "googleMaps": {
+          "apiKey": ""
+        }
+      }
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.renteasy.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "RentEasy uses your location to show nearby properties.",
+        "NSLocationAlwaysUsageDescription": "RentEasy uses your location to show nearby properties."
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#F97316"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "RentEasy needs your location to show nearby properties."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
