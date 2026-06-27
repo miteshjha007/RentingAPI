@@ -20,7 +20,7 @@ interface ToastStore {
   warning: (msg: string, duration?: number) => void
 }
 
-export const useToastStore = create<ToastStore>((set) => ({
+export const useToastStore = create<ToastStore>((set, get) => ({
   queue: [],
 
   show: (message, type = 'info', duration = 3500) => {
@@ -33,16 +33,16 @@ export const useToastStore = create<ToastStore>((set) => ({
   },
 
   success: (msg, duration) =>
-    useToastStore.getState().show(msg, 'success', duration),
+    get().show(msg, 'success', duration),
 
   error: (msg, duration) =>
-    useToastStore.getState().show(msg, 'error', duration ?? 5000),
+    get().show(msg, 'error', duration ?? 5000),
 
   info: (msg, duration) =>
-    useToastStore.getState().show(msg, 'info', duration),
+    get().show(msg, 'info', duration),
 
   warning: (msg, duration) =>
-    useToastStore.getState().show(msg, 'warning', duration),
+    get().show(msg, 'warning', duration),
 }))
 
 // Convenience export so screens don't need to import the store directly

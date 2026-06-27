@@ -11,8 +11,8 @@
     "@supabase/supabase-js": "^2.45.0"
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
-    "@types/react": "^18.3.0"
+    "@types/react": "^18.3.0",
+    "typescript": "^5.4.0"
   },
   "peerDependencies": {
     "react": ">=18.0.0"

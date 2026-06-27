@@ -16,7 +16,7 @@ export type NotificationType = 'inquiry' | 'approval' | 'rejection' | 'subscript
 
 // ── Table Row Types ───────────────────────────────────────────────────────────
 
-export interface Profile {
+export type Profile = {
   id: string
   name: string
   email: string | null
@@ -27,7 +27,7 @@ export interface Profile {
   created_at: string
 }
 
-export interface Property {
+export type Property = {
   id: string
   owner_id: string
   type: PropertyType
@@ -54,7 +54,7 @@ export interface Property {
   updated_at: string
 }
 
-export interface PropertyDetails {
+export type PropertyDetails = {
   id: string
   property_id: string
   // Flat / Home
@@ -78,7 +78,7 @@ export interface PropertyDetails {
   created_at: string
 }
 
-export interface PropertyMedia {
+export type PropertyMedia = {
   id: string
   property_id: string
   url: string
@@ -88,14 +88,14 @@ export interface PropertyMedia {
   created_at: string
 }
 
-export interface SavedProperty {
+export type SavedProperty = {
   id: string
   user_id: string
   property_id: string
   created_at: string
 }
 
-export interface Subscription {
+export type Subscription = {
   id: string
   user_id: string
   plan: SubscriptionPlan
@@ -109,7 +109,7 @@ export interface Subscription {
   updated_at: string
 }
 
-export interface Inquiry {
+export type Inquiry = {
   id: string
   property_id: string
   renter_id: string
@@ -119,7 +119,7 @@ export interface Inquiry {
   created_at: string
 }
 
-export interface Notification {
+export type Notification = {
   id: string
   user_id: string
   title: string
@@ -130,7 +130,7 @@ export interface Notification {
   created_at: string
 }
 
-export interface AdminSetting {
+export type AdminSetting = {
   id: string
   key: string
   value: string
@@ -204,16 +204,123 @@ export interface PropertyFilters {
 export interface Database {
   public: {
     Tables: {
-      profiles:          { Row: Profile;          Insert: ProfileInsert;          Update: ProfileUpdate }
-      properties:        { Row: Property;          Insert: PropertyInsert;          Update: PropertyUpdate }
-      property_details:  { Row: PropertyDetails;   Insert: PropertyDetailsInsert;   Update: PropertyDetailsUpdate }
-      property_media:    { Row: PropertyMedia;      Insert: PropertyMediaInsert;      Update: Partial<PropertyMediaInsert> }
-      saved_properties:  { Row: SavedProperty;      Insert: Omit<SavedProperty, 'id' | 'created_at'>; Update: never }
-      subscriptions:     { Row: Subscription;       Insert: never;                   Update: never }
-      inquiries:         { Row: Inquiry;            Insert: InquiryInsert;           Update: never }
-      notifications:     { Row: Notification;       Insert: NotificationInsert;      Update: Partial<Pick<Notification, 'is_read'>> }
-      admin_settings:    { Row: AdminSetting;       Insert: Omit<AdminSetting, 'id' | 'updated_at'>; Update: Pick<AdminSetting, 'value'> }
+      profiles: {
+        Row: Profile; Insert: ProfileInsert; Update: ProfileUpdate
+        Relationships: []
+      }
+      properties: {
+        Row: Property; Insert: PropertyInsert; Update: PropertyUpdate
+        Relationships: [
+          {
+            foreignKeyName: 'properties_owner_id_fkey'
+            columns: ['owner_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      property_details: {
+        Row: PropertyDetails; Insert: PropertyDetailsInsert; Update: PropertyDetailsUpdate
+        Relationships: [
+          {
+            foreignKeyName: 'property_details_property_id_fkey'
+            columns: ['property_id']
+            isOneToOne: true
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      property_media: {
+        Row: PropertyMedia; Insert: PropertyMediaInsert; Update: Partial<PropertyMediaInsert>
+        Relationships: [
+          {
+            foreignKeyName: 'property_media_property_id_fkey'
+            columns: ['property_id']
+            isOneToOne: false
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      saved_properties: {
+        Row: SavedProperty; Insert: Omit<SavedProperty, 'id' | 'created_at'>; Update: never
+        Relationships: [
+          {
+            foreignKeyName: 'saved_properties_property_id_fkey'
+            columns: ['property_id']
+            isOneToOne: false
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'saved_properties_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      subscriptions: {
+        Row: Subscription; Insert: never; Update: never
+        Relationships: [
+          {
+            foreignKeyName: 'subscriptions_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      inquiries: {
+        Row: Inquiry; Insert: InquiryInsert; Update: never
+        Relationships: [
+          {
+            foreignKeyName: 'inquiries_property_id_fkey'
+            columns: ['property_id']
+            isOneToOne: false
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'inquiries_renter_id_fkey'
+            columns: ['renter_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'inquiries_owner_id_fkey'
+            columns: ['owner_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      notifications: {
+        Row: Notification; Insert: NotificationInsert; Update: Partial<Pick<Notification, 'is_read'>>
+        Relationships: [
+          {
+            foreignKeyName: 'notifications_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      admin_settings: {
+        Row: AdminSetting; Insert: Omit<AdminSetting, 'id' | 'updated_at'>; Update: Pick<AdminSetting, 'value'>
+        Relationships: []
+      }
     }
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    CompositeTypes: Record<string, never>
     Enums: {
       user_role:                UserRole
       property_type:            PropertyType

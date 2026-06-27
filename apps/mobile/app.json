@@ -34,7 +34,8 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static"
+      "output": "static",
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",
@@ -51,7 +52,8 @@
         {
           "locationWhenInUsePermission": "RentEasy needs your location to show nearby properties."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

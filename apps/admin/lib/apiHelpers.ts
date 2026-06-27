@@ -59,8 +59,9 @@ export function buildMeta(page: number, limit: number, total: number): Paginatio
 
 // ── Route handler type ────────────────────────────────────────────────────────
 
-type RouteContext   = { params: Record<string, string> }
-type AdminHandler   = (req: NextRequest, ctx: RouteContext, adminId: string) => Promise<NextResponse>
+type RouteContext<P = Record<string, string>> = { params: P }
+type AdminHandler<P = Record<string, string>> =
+  (req: NextRequest, ctx: RouteContext<P>, adminId: string) => Promise<NextResponse>
 
 // ── withAdmin — wraps a route handler with auth + logging + error handling ────
 //
@@ -70,10 +71,10 @@ type AdminHandler   = (req: NextRequest, ctx: RouteContext, adminId: string) => 
 //     return ok(data)
 //   })
 
-export function withAdmin(handler: AdminHandler) {
+export function withAdmin<P = Record<string, string>>(handler: AdminHandler<P>) {
   return async function routeWrapper(
     req: NextRequest,
-    ctx: RouteContext = { params: {} }
+    ctx: RouteContext<P> = { params: {} as P }
   ): Promise<NextResponse> {
     const path = new URL(req.url).pathname
     const rl   = reqLogger(req.method, path)

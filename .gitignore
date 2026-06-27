@@ -3,6 +3,10 @@ node_modules/
 dist/
 .next/
 
+# Build / TS artifacts
+*.tsbuildinfo
+next-env.d.ts
+
 # Env files — never commit
 .env
 .env.local

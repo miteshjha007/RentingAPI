@@ -1,7 +1,14 @@
 RENTAL PROPERTY MARKETPLACE — SETUP GUIDE
 ==========================================
 
-Tech Stack: Expo (React Native) + Next.js 14 + Supabase + Razorpay + Google Maps
+Tech Stack: Expo SDK 51 (React Native) + Next.js 14 + Supabase + Razorpay + Google Maps
+Package manager: npm (npm workspaces monorepo) — requires Node 18+ and npm 9+
+
+Monorepo layout:
+  apps/mobile         → Expo (React Native) renter/owner app           [FRONTEND]
+  apps/admin          → Next.js 14 admin panel                          [FRONTEND]
+  packages/supabase   → Shared typed Supabase client + React hooks      [SHARED]
+  supabase/           → DB migrations, edge functions, seed             [BACKEND]
 
 STEP 1 — SUPABASE LOCAL DEV
 -----------------------------
@@ -10,7 +17,7 @@ STEP 1 — SUPABASE LOCAL DEV
 3. Init (if new project): supabase init      [already done - supabase/config.toml exists]
 4. Start local stack:     supabase start
 5. Run migrations:        supabase db reset   [applies all migrations + seed.sql]
-6. Regenerate TS types:   yarn db:types
+6. Regenerate TS types:   npm run db:types
 
 STEP 2 — ENV VARIABLES
 ------------------------
@@ -21,12 +28,22 @@ Copy the keys from `supabase start` output into:
 
 STEP 3 — INSTALL DEPENDENCIES
 -------------------------------
-  yarn install
+  npm install            (run once at the repo root — installs ALL workspaces)
 
 STEP 4 — RUN APPS
 ------------------
-  yarn mobile     → Expo mobile app
-  yarn admin      → Next.js admin panel at http://localhost:3000
+  npm run mobile         → Expo mobile app (scan QR with Expo Go / press a/i/w)
+  npm run admin          → Next.js admin panel at http://localhost:3001
+
+  Other useful scripts (run from repo root):
+    npm run typecheck    → TypeScript check across all workspaces
+    npm run build:admin  → Production build of the admin panel
+    npm run db:start     → Start local Supabase stack
+    npm run db:reset     → Apply all migrations + seed
+    npm run db:types     → Regenerate shared TS types from the DB
+
+  NOTE: The admin panel runs on port 3001 (not 3000).
+        Apps will not start until STEP 2 env files exist.
 
 MIGRATION ORDER
 ---------------
